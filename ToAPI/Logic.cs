@@ -24,7 +24,7 @@ namespace ToAPI
         public string Class { get; set; }
 
         /// <summary>
-        /// 方法名
+        /// 方法名：Save
         /// </summary>
         public string Func { get; set; }
 
@@ -34,7 +34,7 @@ namespace ToAPI
         public int ParamNum { get; set; }
 
         /// <summary>
-        /// 方法完全限定名
+        /// 方法完全限定名：Mysoft.Tzsy.Services.ProjCompile.SaleService.Save
         /// </summary>
         public string FullName
         {
@@ -110,18 +110,13 @@ namespace ToAPI
         /// <returns></returns>
         private string getCode()
         {
-            // 触发对象
+            // 触发起始点
             var selection = (TextSelection)_dte.ActiveDocument.Selection;
-            int startLine = selection.AnchorPoint.Line;
-            int startOffset = selection.AnchorPoint.LineCharOffset;
-            
+            EditPoint editPoint = selection.AnchorPoint.CreateEditPoint();
+
             // 选中触发行
             // TODO：匹配多行
-            selection.SelectLine();
-            string code = selection.Text;
-
-            // 还原触发点
-            selection.MoveToLineAndOffset(startLine, startOffset, false);
+            string code = editPoint.GetLines(editPoint.Line, editPoint.Line + 1);
 
             return code;
         }
@@ -201,9 +196,6 @@ namespace ToAPI
         /// <returns></returns>
         private void toFunc(Window win)
         {
-            var doc = (TextDocument)win.Document.Object("TextDocument");
-            doc.Selection.StartOfDocument(false);
-
             // 匹配方法定义代码（vs的正则表达式有点特殊）
             string pattern = "";                
             switch (_serviceInfo.ParamNum)
@@ -218,26 +210,20 @@ namespace ToAPI
                     pattern = string.Format(@"public JsonResult {0}\(([:a \t\n]+,)^{1}[:a \t\n]+\)", _serviceInfo.Func, _serviceInfo.ParamNum - 1);
                     break;
             }
-            bool find = false;
 
-            try
+            var doc = (TextDocument)win.Document.Object("TextDocument");
+
+            EditPoint editPoint = doc.StartPoint.CreateEditPoint();
+            EditPoint endPoint = null;
+            TextRanges tags = null;
+
+            bool find = editPoint.FindPattern(pattern, (int)(vsFindOptions.vsFindOptionsFromStart |
+                vsFindOptions.vsFindOptionsRegularExpression), ref endPoint, ref tags);
+
+            if (find && tags != null)
             {
-                doc.Selection.SelectAll();
-                find = doc.Selection.FindText(pattern, (int)(vsFindOptions.vsFindOptionsFromStart | 
-                    vsFindOptions.vsFindOptionsRegularExpression | 
-                    vsFindOptions.vsFindOptionsMatchInHiddenText));
-            }
-            catch
-            {
-                find = false;
-                throw;
-            }
-            finally
-            {
-                if (!find)
-                {
-                    doc.Selection.StartOfDocument(false);
-                }
+                doc.Selection.MoveToPoint(endPoint, false);
+                doc.Selection.MoveToPoint(editPoint, true);
             }
         }
     }
