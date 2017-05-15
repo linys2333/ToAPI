@@ -145,9 +145,6 @@ namespace ToAPI
 
             // 查找
             execFind(isMatchWhole);
-
-            //Window resultWin = _dte.Windows.Item(Constants.vsWindowKindFindResults2);
-            //((TextSelection)resultWin.Selection).Insert("测试。。。", (int)vsInsertFlags.vsInsertFlagsInsertAtEnd);
         }
 
         /// <summary>
@@ -317,7 +314,7 @@ namespace ToAPI
             findWin.Backwards = false;
             findWin.FilesOfType = "*.js";
             findWin.FindWhat = pattern;
-            findWin.MatchCase = true;
+            findWin.MatchCase = false;
             findWin.MatchInHiddenText = true;
             findWin.MatchWholeWord = true;
             findWin.PatternSyntax = vsFindPatternSyntax.vsFindPatternSyntaxLiteral;
@@ -343,10 +340,11 @@ namespace ToAPI
                 }
 
                 findWin.FindWhat = pattern;
+                findWin.MatchCase = true;
                 findWin.PatternSyntax = vsFindPatternSyntax.vsFindPatternSyntaxRegExpr;
             }
 
-            vsFindResult findFlag = findWin.Execute();
+            findWin.Execute();
 
             // 还原部分设置，防止后续误操作导致卡顿
             findWin.PatternSyntax = vsFindPatternSyntax.vsFindPatternSyntaxLiteral;
