@@ -71,7 +71,7 @@ namespace ToAPI
                     return "";
                 }
 
-                return string.Format(@"\{0}\{1}.cs", 
+                return string.Format(@"\{0}\{1}", 
                     Regex.Replace(Namespace, @"(?<=Services)\..+", m => m.Value.Replace(".", @"\")), 
                     Class);
             }
@@ -110,14 +110,22 @@ namespace ToAPI
             if (string.IsNullOrEmpty(_serviceFunc.Namespace))
             {
                 MessageBox.Show("该方法缺少js引用！");
+                return;
             }
 
             // 查找
-            string path = _serviceFunc.FilePath;
-            Window win = _dte.ItemOperations.OpenFile(getRootPath() + path, Constants.vsViewKindPrimary);
+            string path = getPath();
+            if (string.IsNullOrEmpty(path))
+            {
+                MessageBox.Show("未找到后端文件！");
+                return;
+            }
+
+            Window win = _dte.ItemOperations.OpenFile(path, Constants.vsViewKindPrimary);
             if (!toFunc(win))
-            { 
+            {
                 MessageBox.Show("未找到匹配方法！");
+                return;
             }
         }
 
@@ -170,12 +178,12 @@ namespace ToAPI
         /// <param name="code"></param>
         private void analyzeInfo(string code)
         {
-            string service = Regex.Match(code, @"(?<=\= ?)\w+(?=Service\.)").Value;
+            string service = Regex.Match(code, @"\b\w+(?=Service\.)").Value;
             string js = getJs(service);
 
             _serviceFunc.Namespace = Regex.Match(js, string.Format(@"(?<=/service/)[\w\.]+(?=\.{0}/)", service)).Value;
             _serviceFunc.Class = service + "Service";
-            _serviceFunc.Func = Regex.Match(code, @"(?<=Service\.)\w+(?=\()").Value;
+            _serviceFunc.Func = Regex.Match(code, @"(?<=Service\.)\w+\b").Value;
 
             // 采用正则平衡组匹配嵌套参数
             string param = Regex.Match(code,
@@ -213,9 +221,22 @@ namespace ToAPI
         /// 根据触发文件的路径获取代码根路径
         /// </summary>
         /// <returns></returns>
-        private string getRootPath()
+        private string getPath()
         {
-            return Regex.Match(_dte.ActiveDocument.Path, @"^.+\\ERP\\明源整体解决方案(?=\\Map)", RegexOptions.IgnoreCase).Value;
+            string rootPath = Regex.Match(_dte.ActiveDocument.Path, @"^.+\\ERP\\明源整体解决方案(?=\\Map)", RegexOptions.IgnoreCase).Value;
+            string path = rootPath + _serviceFunc.FilePath;
+            string extName = ".cs";
+
+            if (!File.Exists(path + extName))
+            {
+                path += "s";
+
+                if (!File.Exists(path + extName))
+                {
+                    return "";
+                }
+            }
+            return path + extName;
         }
 
         /// <summary>
