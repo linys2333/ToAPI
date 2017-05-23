@@ -37,7 +37,7 @@ namespace ToAPI
         /// <summary>
         /// 返回值类型
         /// </summary>
-        public string ReturnType { get; set; }
+        public bool IsPublic { get; set; }
 
         /// <summary>
         /// 方法完全限定名：Mysoft.Tzsy.Services.ProjCompile.SaleService.Save
@@ -146,7 +146,7 @@ namespace ToAPI
 
             if (!_serviceFunc.Namespace.Contains("Services") ||
                 !_serviceFunc.Class.EndsWith("Service") ||
-                !_serviceFunc.ReturnType.EndsWith("JsonResult"))
+                !_serviceFunc.IsPublic)
             {
                 return;
             }
@@ -312,7 +312,7 @@ namespace ToAPI
                 _serviceFunc.Class = codeClass.Name;
                 _serviceFunc.Func = codeFunc.Name;
                 _serviceFunc.ParamNum = codeFunc.Parameters.Count;
-                _serviceFunc.ReturnType = codeFunc.Type.AsString;
+                _serviceFunc.IsPublic = codeFunc.Access == vsCMAccess.vsCMAccessPublic;
             }
             catch (System.Runtime.InteropServices.COMException ex)
             {
@@ -333,7 +333,7 @@ namespace ToAPI
 
             findWin.Action = vsFindAction.vsFindActionFindAll;
             findWin.Backwards = false;
-            findWin.FilesOfType = "*.js";
+            findWin.FilesOfType = "*.aspx;*.js";
             findWin.FindWhat = pattern;
             findWin.MatchCase = false;
             findWin.MatchInHiddenText = true;
@@ -360,6 +360,7 @@ namespace ToAPI
                         break;
                 }
 
+                findWin.FilesOfType = "*.js";
                 findWin.FindWhat = pattern;
                 findWin.MatchCase = true;
                 findWin.PatternSyntax = vsFindPatternSyntax.vsFindPatternSyntaxRegExpr;
