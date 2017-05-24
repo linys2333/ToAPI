@@ -42,10 +42,13 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Biz\Model\ServiceFunc.cs" />
+    <Compile Include="Biz\Pub.cs" />
     <Compile Include="Connect.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="APIHelper.cs" />
+    <Compile Include="Biz\ToDefineBiz.cs" />
+    <Compile Include="Biz\FindUsedBiz.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CommandBar.resx" />
