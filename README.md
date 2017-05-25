@@ -6,7 +6,9 @@
 
 > 1、从js跳转到后端ServiceAPI定义
 
-![ToAPI](./Doc/ToAPI.png)
+![ToAPI](./Doc/ToDefine.png)
+
+![ToAPI](./Doc/ToDefine2.png)
 
 > 2、查找ServiceAPI引用
 
