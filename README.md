@@ -1,6 +1,6 @@
 ## 一些说明
 
-> VS2008的插件，适用于明源投资收益系统(ERP351+)的代码
+> VS2008的插件，适用于明源项目投资收益系统所有版本(ERP307+)的代码
 
 > 安装包地址：<https://raw.githubusercontent.com/linys2333/ToAPI/master/%E5%AE%89%E8%A3%85/ToAPI.zip>
 

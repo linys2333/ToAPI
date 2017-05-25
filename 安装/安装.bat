@@ -8,16 +8,9 @@ set addinpath=%vspath%\Addins
 echo 目标目录：%addinpath%
 
 echo ====================
-echo 开始卸载旧版本...
-echo ====================
-	
-del %addinpath%\ToAPI.dll
-del %addinpath%\ToAPI.AddIn
-
-echo ====================
 echo 开始安装...
 echo ====================
-	
+
 if exist %vspath% (
 	if not exist %addinpath% (
 		mkdir %addinpath%
