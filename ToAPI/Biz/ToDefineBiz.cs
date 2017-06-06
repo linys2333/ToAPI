@@ -62,6 +62,18 @@ namespace ToAPI
             Window win = _dte.ItemOperations.OpenFile(path, Constants.vsViewKindPrimary);
             if (!toFunc(win))
             {
+                if (_serviceFunc.ParamNum > -1)
+                {
+                    // 如果带参数匹配不到，那么仅匹配方法名
+                    _serviceFunc.ParamNum = -1;
+
+                    if (toFunc(win))
+                    {
+                        MessageBox.Show("未找到匹配方法，已定位到同名方法！");
+                        return;
+                    }
+                }
+
                 MessageBox.Show("未找到匹配方法！");
                 return;
             }
@@ -152,7 +164,7 @@ namespace ToAPI
         /// <returns></returns>
         private string getPath()
         {
-            string rootPath = Regex.Match(_dte.ActiveDocument.Path, @"^.+\\ERP\\明源整体解决方案(?=\\Map)", RegexOptions.IgnoreCase).Value;
+            string rootPath = Regex.Match(_dte.ActiveDocument.Path, @"^.+\\明源整体解决方案(?=\\Map)", RegexOptions.IgnoreCase).Value;
             string path = rootPath + _serviceFunc.FilePath;
             string extName = ".cs";
 
