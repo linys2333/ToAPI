@@ -43,7 +43,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Biz\Model\ServiceFunc.cs" />
-    <Compile Include="Biz\Pub.cs" />
+    <Compile Include="Biz\PubBiz.cs" />
     <Compile Include="Connect.cs">
       <SubType>Code</SubType>
     </Compile>

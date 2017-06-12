@@ -6,11 +6,11 @@ namespace ToAPI
     /// <summary>
     /// ServiceAPI相关操作
     /// </summary>
-    public class Pub
+    public class PubBiz
     {
         private DTE2 _dte;
 
-        public Pub(DTE2 dte)
+        public PubBiz(DTE2 dte)
         {
             _dte = dte;
         }

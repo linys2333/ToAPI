@@ -27,7 +27,7 @@ namespace ToAPI
         public void ToDefine()
         {
             // 解析
-            string selection = new Pub(_dte).GetSelection();
+            string selection = new PubBiz(_dte).GetSelection();
             if (Regex.IsMatch(selection, @"Mysoft\.\w+\.Services\."))
             {
                 // 包含“命名空间”的识别为旧代码
@@ -203,7 +203,7 @@ namespace ToAPI
         private bool toFunc(Window win)
         {
             // 匹配方法定义代码（vs的正则表达式有点特殊）
-            string pattern = "";                
+            string pattern = @":a_ \.\<\>\t\n";                
             switch (_serviceFunc.ParamNum)
             {
                 // -1不匹配参数个数
@@ -214,10 +214,10 @@ namespace ToAPI
                     pattern = string.Format(@"public :c+ {0}\(\)", _serviceFunc.Func);
                     break;
                 case 1:
-                    pattern = string.Format(@"public :c+ {0}\([:a \t\n]+\)", _serviceFunc.Func);
+                    pattern = string.Format(@"public :c+ {1}\([{0}]+\)", pattern, _serviceFunc.Func);
                     break;
                 default:
-                    pattern = string.Format(@"public :c+ {0}\(([:a \t\n]+,)^{1}[:a \t\n]+\)", _serviceFunc.Func, _serviceFunc.ParamNum - 1);
+                    pattern = string.Format(@"public :c+ {1}\(([{0}]+,)^{2}[{0}]+\)", pattern, _serviceFunc.Func, _serviceFunc.ParamNum - 1);
                     break;
             }
 
