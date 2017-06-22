@@ -95,8 +95,7 @@ namespace ToAPI
             _serviceFunc.Func = Regex.Match(code, @"(?<=Service\.)\w+\b").Value;
 
             // 采用正则平衡组匹配嵌套参数
-            string param = Regex.Match(code,
-                string.Format(@"(?<={0}\()(?>[^\(\)]+|\((?<sign>)|\)(?<-sign>))*(?(sign)(?!))(?=\))", _serviceFunc.Func)).Value;
+            string param = Regex.Match(code, string.Format(@"(?<={0}\s*?\()(?>[^\(\)]+|\((?<sign>)|\)(?<-sign>))*(?(sign)(?!))(?=\))", _serviceFunc.Func)).Value;
 
             if(string.IsNullOrEmpty(param))
             {
