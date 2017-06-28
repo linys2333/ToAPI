@@ -149,12 +149,36 @@ namespace ToAPI
                 }
             }
 
+            string text = "";
             using (var sw = new StreamReader(fullPath, Encoding.UTF8))
             {
-                string text = sw.ReadToEnd();
-                string pattern = string.Format(@"src=\S+\.{0}/Scripts.aspx", service);
-                return Regex.Match(text, pattern, RegexOptions.IgnoreCase).Value;
+                text = sw.ReadToEnd();
             }
+
+            string pattern = string.Format(@"src=\S+?\.{0}/Scripts.aspx", service);
+            string value = Regex.Match(text, pattern, RegexOptions.IgnoreCase).Value;
+
+            // 匹配旧写法
+            if (string.IsNullOrEmpty(value))
+            {
+                pattern = string.Format(@"src=\S+?/{0}Service.js", service);
+                value = Regex.Match(text, pattern, RegexOptions.IgnoreCase).Value;
+
+                if (!string.IsNullOrEmpty(value))
+                {
+                    string[] valueList = value.Split('/');
+                    if (valueList.Length < 5) 
+                    {
+                        return "";                    
+                    }
+
+                    // 转换成新写法
+                    value = string.Format("/service/Mysoft.{0}.Services.{1}.{2}/",
+                        valueList[1], valueList[4], service);
+                }
+            }
+
+            return value;
         }
 
         /// <summary>
