@@ -226,7 +226,7 @@ namespace ToAPI
         private bool toFunc(Window win)
         {
             // 匹配方法定义代码（vs的正则表达式有点特殊）
-            string pattern = @":a_ \.\<\>\t\n";                
+            string pattern = @":a_ \.\<\>\[\]\t\n";                
             switch (_serviceFunc.ParamNum)
             {
                 // -1不匹配参数个数
